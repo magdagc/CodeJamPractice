@@ -58,70 +58,34 @@ func getSolution(caseNumber int, input string) string {
 		panic(err)
 	}
 
-	output += getDancers(D, K, N)
+	output += getDancers(int64(D), int64(K), int64(N))
 
 	return output
 }
 
-func getDancers(dancers, dancer, turns int) string {
-	danceFloor := make([]int, dancers)
-	var dancerClockwise, dancerCounterClockwise int
+func getDancers(dancers, dancer, turns int64) string {
+	var dancerClockwise, dancerCounterClockwise int64
 
-	for i := 0; i < dancers; i++ {
-		danceFloor[i] = i + 1
-	}
-
-	// When the turn is equal to the number of dances,
-	// the dancefloor as when it started
-	turns = turns % dancers
-
-	for i := 1; i <= turns; i++ {
-		clockwise := false
-		if i%2 != 0 {
-			clockwise = true
-		}
-		danceFloor = swap(danceFloor, clockwise)
-	}
-
-	dancerIndex := 0
-
-	for i, v := range danceFloor {
-		if v == dancer {
-			dancerIndex = i
-		}
-	}
-
-	if dancerIndex == dancers-1 {
-		dancerClockwise = danceFloor[0]
+	if dancer%2 != 0 {
+		dancerClockwise = ((dancer + (2 * turns)) % dancers) + 1
+		dancerCounterClockwise = ((dancer - 2 + (2 * turns)) % dancers) + 1
 	} else {
-		dancerClockwise = danceFloor[dancerIndex+1]
+		aux := dancer - (2 * turns)
+		if aux < dancers*(-1) {
+			aux = (aux * -1) % dancers
+			aux *= -1
+		}
+		dancerClockwise = ((dancers + aux) % dancers) + 1
+
+		aux -= 2
+		if aux < dancers*(-1) {
+			aux = (aux * -1) % dancers
+			aux *= -1
+		}
+		dancerCounterClockwise = ((dancers + aux) % dancers) + 1
 	}
 
-	if dancerIndex == 0 {
-		dancerCounterClockwise = danceFloor[dancers-1]
-	} else {
-		dancerCounterClockwise = danceFloor[dancerIndex-1]
-	}
-	result := strconv.Itoa(dancerClockwise) + " " + strconv.Itoa(dancerCounterClockwise)
+	result := fmt.Sprintf("%v %v", dancerClockwise, dancerCounterClockwise)
 
 	return result
-}
-
-func swap(danceFloor []int, clockwise bool) []int {
-	var aux int
-	startIndex := 0
-	if !clockwise {
-		aux = danceFloor[0]
-		danceFloor[0] = danceFloor[len(danceFloor)-1]
-		danceFloor[len(danceFloor)-1] = aux
-		startIndex = 1
-	}
-
-	for i := startIndex; i < len(danceFloor)-1-startIndex; i += 2 {
-		aux = danceFloor[i]
-		danceFloor[i] = danceFloor[i+1]
-		danceFloor[i+1] = aux
-	}
-
-	return danceFloor
 }
