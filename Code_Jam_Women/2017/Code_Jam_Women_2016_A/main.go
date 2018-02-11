@@ -75,14 +75,56 @@ func getSolution(caseNumber int, input string) string {
 		tickets[i/2] = ticket{row: inputRow, column: inputColumn}
 	}
 
-	friendsPerRow := make([]int, rows)
-
-	output += getMaxFriendsPerRow(tickets, friendsPerRow)
+	output += getMaxFriendsPerRow(tickets, rows)
 
 	return output
 }
 
-func getMaxFriendsPerRow(tickets []ticket, friendsPerRow []int) string {
+func getMaxFriendsPerRow(tickets []ticket, rows int) string {
 
-	return ""
+	maxFriends := 1
+
+	for i := 0; i < rows; i++ {
+		maxFriends = getMaxFriends(i+1, tickets, maxFriends)
+	}
+
+	return strconv.Itoa(maxFriends)
+}
+
+func (t ticket) isRowPossible(r int) bool {
+	return r == t.row || r == t.column
+}
+
+func (t ticket) exists(tickets []ticket) bool {
+	appearedOneTime := false
+	for _, v := range tickets {
+		if v.row == t.row && v.column == t.column {
+			if appearedOneTime {
+				return true
+			}
+			appearedOneTime = true
+		}
+	}
+	return false
+}
+
+func getMaxFriends(row int, tickets []ticket, currentMaxFriends int) int {
+	maxFriends := 0
+	repeatedTickets := 0
+	for _, t := range tickets {
+		if t.isRowPossible(row) {
+			maxFriends++
+			if t.exists(tickets) {
+				repeatedTickets++
+			}
+		}
+	}
+
+	maxFriends -= repeatedTickets / 2
+
+	if currentMaxFriends > maxFriends {
+		return currentMaxFriends
+	}
+	return maxFriends
+
 }
