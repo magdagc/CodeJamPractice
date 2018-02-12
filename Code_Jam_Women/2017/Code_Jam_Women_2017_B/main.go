@@ -80,7 +80,7 @@ func getSucceedProbability(probabilities []float64, roles int) string {
 		if i < roles {
 			roleArray[i].lowerProbability = v
 		} else {
-			roleArray[i-roles].biggerProbability = v
+			roleArray[roles*2-1-i].biggerProbability = v
 		}
 	}
 
