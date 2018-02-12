@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const completeRow = "I/O/I/O/I/O/I/O\n"
+
 func main() {
 	input := make([]string, 0)
 	output := make([]string, 0)
@@ -60,57 +62,54 @@ func getSolution(caseNumber int, input string) string {
 
 func getGrid(D, N int) string {
 
-	var grid []string
-
 	if N == 0 {
 		return "IO"
 	}
 
-	if N == 1 {
-		return "I/O"
+	removeFromTopBottom := (287 - N) % 3 //1
+	removeFromMiddle := (287 - N) / 3    //94
+
+	// Max amount of removed I/O in the middle is 273
+	// That is 91 (273/3) slashes
+	// After that, keep removing from top or bottom
+	if removeFromMiddle > 91 {
+		// Total amount of slashes in top+bottom minus N
+		removeFromTopBottom = (14 - N)
+		removeFromMiddle = 91
 	}
 
-	if N <= 5 {
-		grid = make([]string, 3)
-		grid[0] = "OOOOO"
-		grid[2] = "O/I/O"
+	// Top and bottom lines
+	// Remove at max 7 slashes
+	top := completeRow
+	bottom := completeRow
+	if removeFromTopBottom > 7 {
+		top = strings.Replace(top, "/", "O", 7)
+		removeFromTopBottom -= 7
+		bottom = strings.Replace(bottom, "/", "O", removeFromTopBottom)
+	} else {
+		top = strings.Replace(top, "/", "O", removeFromTopBottom)
+	}
 
-		switch N {
-		case 2:
-			grid[1] = "OOOOO"
-		case 3:
-			grid[1] = "OO/OO"
-		case 4:
-			grid[1] = "O//OO"
-		case 5:
-			grid[1] = "O///O"
+	result := top
+
+	rowsToRemoveAllSlashes := removeFromMiddle / 7
+	slashesToRemoveFromOneRow := removeFromMiddle % 7
+
+	for i := 0; i < 13; i++ {
+		if slashesToRemoveFromOneRow > 0 {
+			result += strings.Replace(completeRow, "/", "O", slashesToRemoveFromOneRow)
+			slashesToRemoveFromOneRow = 0
+		} else {
+			if rowsToRemoveAllSlashes > 0 {
+				result += strings.Replace(completeRow, "/", "O", 7)
+				rowsToRemoveAllSlashes--
+			} else {
+				result += completeRow
+			}
 		}
-
 	}
 
-	if N <= 8 {
-		grid = make([]string, 5)
-		grid[0] = "OOOOO"
-		grid[1] = "O///O"
-		grid[2] = "O/I/O"
-		grid[4] = "OOOOO"
-
-		switch N {
-		case 6:
-			grid[3] = "OO/OO"
-		case 7:
-			grid[3] = "O//OO"
-		case 8:
-			grid[3] = "O///O"
-		}
-
-	}
-
-	result := ""
-
-	for _, v := range grid {
-		result += v + "\n"
-	}
+	result += bottom
 
 	return result[:len(result)-1]
 }
