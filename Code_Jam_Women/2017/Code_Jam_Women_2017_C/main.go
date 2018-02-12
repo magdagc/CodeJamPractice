@@ -39,7 +39,7 @@ func main() {
 }
 
 func getSolution(caseNumber int, input string) string {
-	output := "Case #" + strconv.Itoa(caseNumber) + ": "
+	output := "Case #" + strconv.Itoa(caseNumber) + ":\n"
 
 	inputs := strings.Split(input, " ")
 
@@ -60,9 +60,57 @@ func getSolution(caseNumber int, input string) string {
 
 func getGrid(D, N int) string {
 
+	var grid []string
+
 	if N == 0 {
 		return "IO"
 	}
 
-	return ""
+	if N == 1 {
+		return "I/O"
+	}
+
+	if N <= 5 {
+		grid = make([]string, 3)
+		grid[0] = "OOOOO"
+		grid[2] = "O/I/O"
+
+		switch N {
+		case 2:
+			grid[1] = "OOOOO"
+		case 3:
+			grid[1] = "OO/OO"
+		case 4:
+			grid[1] = "O//OO"
+		case 5:
+			grid[1] = "O///O"
+		}
+
+	}
+
+	if N <= 8 {
+		grid = make([]string, 5)
+		grid[0] = "OOOOO"
+		grid[1] = "O///O"
+		grid[2] = "O/I/O"
+		grid[4] = "OOOOO"
+
+		switch N {
+		case 6:
+			grid[3] = "OO/OO"
+		case 7:
+			grid[3] = "O//OO"
+		case 8:
+			grid[3] = "O///O"
+		}
+
+	}
+
+	result := ""
+
+	for _, v := range grid {
+		result += v + "\n"
+	}
+
+	return result[:len(result)-1]
 }
