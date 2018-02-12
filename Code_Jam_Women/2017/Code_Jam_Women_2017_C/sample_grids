@@ -1,0 +1,46 @@
+N = 0
+I O
+
+N = 1
+I / O
+
+N = 2
+O O O O O
+O O O O O
+O / I / O
+
+N=3
+O O O O O
+O O / O O
+O / I / O
+
+N=4
+O O O O O
+O / / O O
+O / I / O
+
+N=5
+O O O O O
+O / / / O
+O / I / O
+
+N=6
+O O O O O
+O / / / O
+O / I / O
+O O / O O
+O O O O O
+
+N=7
+O O O O O
+O / / / O
+O / I / O
+O / / O O
+O O O O O
+
+N=8
+O O O O O
+O / / / O
+O / I / O
+O / / / O
+O O O O O
