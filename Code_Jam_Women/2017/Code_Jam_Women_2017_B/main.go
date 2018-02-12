@@ -10,7 +10,7 @@ import (
 )
 
 type role struct {
-	biggerProbability float64
+	higherProbability float64
 	lowerProbability  float64
 }
 
@@ -80,12 +80,12 @@ func getSucceedProbability(probabilities []float64, roles int) string {
 		if i < roles {
 			roleArray[i].lowerProbability = v
 		} else {
-			roleArray[roles*2-1-i].biggerProbability = v
+			roleArray[roles*2-1-i].higherProbability = v
 		}
 	}
 
 	for _, r := range roleArray {
-		result *= (1 - (r.biggerProbability * r.lowerProbability))
+		result *= (1 - (r.higherProbability * r.lowerProbability))
 	}
 
 	return fmt.Sprintf("%6f", result)
